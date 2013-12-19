@@ -1,12 +1,12 @@
 package test.main;
 
-import java.io.BufferedReader;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,21 +14,31 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import mediautil.image.jpeg.AbstractImageInfo;
+import mediautil.image.jpeg.Exif;
+import mediautil.image.jpeg.LLJTran;
+import mediautil.image.jpeg.LLJTranException;
 import net.sourceforge.jheader.App1Header;
-import net.sourceforge.jheader.App1Header.Tag;
-import net.sourceforge.jheader.ExifFormatException;
-import net.sourceforge.jheader.JpegFormatException;
 import net.sourceforge.jheader.JpegHeaders;
-import net.sourceforge.jheader.TagFormatException;
 import net.sourceforge.jheader.TagValue;
+
+import org.apache.sanselan.ImageReadException;
+import org.apache.sanselan.Sanselan;
+import org.apache.sanselan.common.IImageMetadata;
+import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
+import org.apache.sanselan.formats.tiff.TiffField;
+import org.apache.sanselan.formats.tiff.constants.TiffConstants;
+
+import com.drew.imaging.jpeg.JpegMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 
 
 public class Main {
@@ -117,8 +127,251 @@ public class Main {
 		Main mainClass = new Main();
 //		mainClass.getDataTimeByFileName("/storage/sdcard0/DCIM/C360_2013-03-23-10-09-43-011.jpg");
 //		mainClass.getDataTimeByFileName("/storage/sdcard0/DCIM/IMG_20130210_161320.jpg");
-		mainClass.exifStudy();
+//		mainClass.exifStudy();
 //		mainClass.dateTimeCalendarStudy();
+//		mainClass.metadataExtractorStudy();
+//		mainClass.repairPhotoTimeStudy();
+//		File file = new File("D:\\My Documents\\My Pictures\\testtime\\");
+//		System.out.println(file.listFiles()[0].getPath());
+//		mainClass.studyStaitcGetSelf();
+		try { 
+	    	((A)new B()).process();
+	    	System.out.print("Normal ");
+	    } catch (Exception e) { 
+	    	System.out.print("Exception ");
+	    }  
+	}
+	
+	static class A {  
+		public void process() { 
+			System.out.print("A ");
+			throw new RuntimeException();
+		}
+
+	}
+	static class B extends A {  
+		public void process() {  
+			System.out.print("B ");
+		}
+	}  
+
+	
+	private static final String thisClassName = Runtime.getRuntime().getClass().getName();
+	private void studyStaitcGetSelf() {
+//		System.out.println("className=" + thisClassName);
+		getThisClassName();
+	}
+	
+	public static void getThisClassName()
+	{
+	    // 方法1：通过SecurityManager的保护方法getClassContext()
+	    String clazzName = new SecurityManager()
+	    {
+	        public String getClassName() 
+	        {
+	            return getClassContext()[1].getName();
+	        }
+	    }.getClassName();
+	    System.out.println(clazzName);
+	    // 方法2：通过Throwable的方法getStackTrace()
+	    String clazzName2 = new Throwable().getStackTrace()[1].getClassName();
+	    System.out.println(clazzName2);
+	    // 方法3：通过分析匿名类名称()
+	    String clazzName3 = new Object()    {
+	        public String getClassName() 
+	        {
+	            String clazzName = this.getClass().getName();
+	            return clazzName.substring(0, clazzName.lastIndexOf('$'));
+	        }
+	    }.getClassName();
+	    System.out.println(clazzName3);
+
+	    System.out.println(new Object() { }.getClass().getEnclosingClass().getName());
+	    
+	    System.out.println("thread=" +  ClassName.CALLED_CLASS_NAME());
+	}
+	
+	public static class ClassName {
+		public static String CALLED_CLASS_NAME() {
+			return Thread.currentThread().getStackTrace()[2].getClassName();
+		}
+	}
+	
+	private void repairPhotoTimeStudy() {
+		new RepairPhotoTime().debug();;
+	}
+	
+	private void metadataExtractorStudy() {
+		File file = new File("D:\\My Documents\\My Pictures\\testtime\\20081230151610654_have_origal_time.jpg");
+//		File file = new File("D:\\My Documents\\My Pictures\\testtime\\IMG_20130505_155951-1.jpg");
+		System.out.println("printExifByMetadataExtractor");
+		printExifByMetadataExtractor(file);
+//		System.out.println("\nprintExifByJHead");
+//		printExifByJHead(file);
+//		System.out.println("printExifByLLJTran");
+//		printExifByLLJTran(file);
+//		System.out.println("printExifBySanselan");
+//		printExifBySanselan(file);
+	}
+	
+	
+	private void printExifBySanselan(File file) {
+		IImageMetadata metadata = null;
+        try {
+            metadata = Sanselan.getMetadata(file);
+        } catch (ImageReadException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+//        if (metadata instanceof JpegImageMetadata) {
+        	JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+            System.out.println("\nFile: " + file.getPath());
+            
+            TiffField field = jpegMetadata.findEXIFValue(TiffConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
+            if (field == null) {
+                System.out.println("Not Found.");
+            } else {
+                System.out.println(field.getValueDescription());
+            }
+//        }
+	}
+	
+	private void printExifByLLJTran(File file) {
+		LLJTran llj = new LLJTran(file);
+		try {
+			llj.read(LLJTran.READ_INFO,true);
+		} catch (LLJTranException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		llj.setComment("test jpeg commen");
+
+//		llj.setAppx(0, LLJTran.dummyExifHeader, 0, LLJTran.dummyExifHeader.length, true);
+		AbstractImageInfo imageInfo = llj.getImageInfo();
+		
+		Date date = new Date();
+		System.out.println("getDataTimeOriginal=" + imageInfo.getDataTimeOriginalString() + " date=" + date);
+		
+//		if(imageInfo.getThumbnailLength() > 0)
+//        {
+//            System.out.println("Image already has a Thumbnail. Exitting..");
+//            System.exit(1);
+//        }
+
+		int tag = Exif.DATETIME;
+		if(imageInfo instanceof Exif) {
+			Exif exif = (Exif) imageInfo;
+			mediautil.image.jpeg.Entry entry = exif.getTagValue(tag, true);
+//			Object object = exif.getAttribute(Exif.DATETIMEORIGINALSTRING);
+//			System.out.println(object);
+			System.out.println("instanceof Exif, entry=" + entry + " getValues=" + entry.getValue(0));
+		} else {
+			System.out.println("have not exif data");
+			llj.addAppx(LLJTran.dummyExifHeader, 0,
+                    LLJTran.dummyExifHeader.length, true);
+			imageInfo = llj.getImageInfo(); // This would have changed
+			Exif exif = (Exif) imageInfo;
+			
+			 
+        
+//			mediautil.image.jpeg.Entry entry = new mediautil.image.jpeg.Entry(Exif.ASCII);
+			mediautil.image.jpeg.Entry entry = exif.getTagValue(tag, true);
+			entry.setValue(0, "2013:12:12 13:13:13");		// format: yyyy:MM:dd HH:mm:ss
+			exif.setTagValue(tag, -1, entry, true);
+			llj.refreshAppx();  // Recreate Marker Data for changes done
+			
+			OutputStream out;
+			try {
+				File outFile = new File(file.getPath()+"_bak.jpg");
+				outFile.createNewFile();
+				out = new BufferedOutputStream(new FileOutputStream(outFile));
+				llj.xferInfo(null, out, LLJTran.REPLACE, LLJTran.REPLACE);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		
+	}
+	
+	private void printExifByMetadataExtractor(File file) {
+		Metadata metadata = null;
+		try {
+			metadata = JpegMetadataReader.readMetadata(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		
+		// obtain the Exif directory
+//		ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
+//
+//		// query the tag's value
+//		Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+//		System.out.println(date);
+		
+		
+		for (Directory directory : metadata.getDirectories()) {
+		    for (Tag tag : directory.getTags()) {
+		        System.out.println("directory=" + directory.getClass() + " tag=" + tag);
+		    }
+		}
+		
+		
+//		Directory exif = metadata.getDirectory(ExifIFD0Directory.class);	//ExifIFD0Directory、ExifInteropDirectory、ExifSubIFDDirectory、ExifThumbnailDirectory
+//		Collection<Tag> tags = exif.getTags();
+//		Iterator<Tag> iter = tags.iterator();
+//		// 逐个遍历每个Tag
+//		while (iter.hasNext()) {
+//			Tag tag = (Tag) iter.next();
+//			System.out.println(tag);
+//		}
+		
+		
+//		// 检查是否Tag中包含了图片属性-摘要中的作者 (xp)
+//		if (exif.containsTag(ExifIFD0Directory.TAG_WIN_AUTHOR)) {
+//			System.out.println("->Pic author is "
+//					+ exif.getDescription(ExifIFD0Directory.TAG_WIN_AUTHOR));
+//		}
+//		// 检查是否Tag中包含了图片属性-摘要中的标题 (xp)
+//		if (exif.containsTag(ExifIFD0Directory.TAG_WIN_TITLE)) {
+//			System.out.println("->Pic title is "
+//					+ exif.getDescription(ExifIFD0Directory.TAG_WIN_TITLE));
+//		}
+//		// 检查是否Tag中包含了图片属性-摘要中的主题 (xp)
+//		if (exif.containsTag(ExifIFD0Directory.TAG_WIN_SUBJECT)) {
+//			System.out.println("->Pic subject is "
+//					+ exif.getDescription(ExifIFD0Directory.TAG_WIN_SUBJECT));
+//		}
+	}
+	
+	private void printExifByJHead(File file) {
+		String filePath = file.getPath();
+		JpegHeaders jpegHeaders;
+		try {
+			jpegHeaders = new JpegHeaders(filePath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		} 
+		App1Header exifHeader = jpegHeaders.getApp1Header();
+
+		// 遍历显示EXIF
+		SortedMap<net.sourceforge.jheader.App1Header.Tag, TagValue> tags = exifHeader.getTags();
+//		Map.Entry<Tag, TagValue> entry = tags.entrySet();
+		for (Entry<net.sourceforge.jheader.App1Header.Tag, TagValue> entry: tags.entrySet()) {
+			System.out.println(entry.getKey() + "[" + entry.getKey().name
+					+ "]:" + entry.getValue());
+		}
+
+		// 修改EXIF的拍照日期
+//		exifHeader.setValue(Tag.DATETIMEORIGINAL, getTimeByFileName(filename));
+		// 保存
+//		jpegHeaders.save(true);
 	}
 	
 	private void dateTimeCalendarStudy() {
