@@ -14,11 +14,16 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.SortedMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 import mediautil.image.jpeg.AbstractImageInfo;
 import mediautil.image.jpeg.Exif;
@@ -28,6 +33,7 @@ import net.sourceforge.jheader.App1Header;
 import net.sourceforge.jheader.JpegHeaders;
 import net.sourceforge.jheader.TagValue;
 
+import org.apache.http.util.ByteArrayBuffer;
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.Sanselan;
 import org.apache.sanselan.common.IImageMetadata;
@@ -125,6 +131,9 @@ public class Main {
 //		System.out.println("main thread exit");
 		
 		Main mainClass = new Main();
+//		System.out.println("  ".matches("[\\s]*"));
+//		mainClass.studyRandom();
+//		System.out.println(mainClass.getClass());
 //		mainClass.getDataTimeByFileName("/storage/sdcard0/DCIM/C360_2013-03-23-10-09-43-011.jpg");
 //		mainClass.getDataTimeByFileName("/storage/sdcard0/DCIM/IMG_20130210_161320.jpg");
 //		mainClass.exifStudy();
@@ -134,14 +143,98 @@ public class Main {
 //		File file = new File("D:\\My Documents\\My Pictures\\testtime\\");
 //		System.out.println(file.listFiles()[0].getPath());
 //		mainClass.studyStaitcGetSelf();
-		try { 
-	    	((A)new B()).process();
-	    	System.out.print("Normal ");
-	    } catch (Exception e) { 
-	    	System.out.print("Exception ");
-	    }  
+//		try { 
+//	    	((A)new B()).process();
+//	    	System.out.print("Normal ");
+//	    } catch (Exception e) { 
+//	    	System.out.print("Exception ");
+//	    }  
+		
+//		studyGenerateJSON();
+//		String[] arr = ("a" + "|" + "b").split("\\|");
+//		for (int i = 0; i < arr.length; ++i) {
+//			System.out.println("arr["+i+"]=" + arr[i]);
+//		}
+		
+//		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//		System.out.println(date);
+		
+//		studyDES();
+		studyProgramInfoEncryptor();
 	}
 	
+	private void studyDynamicProxy() {
+		
+	}
+	
+	private static void studyProgramInfoEncryptor() {
+		ProgramInfoEncryptor.testEncrypt();
+		ProgramInfoEncryptor.testBuildConfig();
+		
+//		DESHelper.decryptDES(decryptString, "12345678");
+	}
+
+	private static void studyDES() {
+//		byte byte1[] = "sowell13".getBytes();
+//		byte byte2[] = "sowell13".getBytes();
+//		byte byte1[] = new byte[] {Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10")};
+//		byte byte2[] = new byte[] {Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10"), Byte.decode("0x10")};
+//		SecretKeySpec key = new SecretKeySpec(byte1, "AES");
+//		SecretKeySpec key2 = new SecretKeySpec(byte2, "AES");
+//		System.out.println(key.equals(key2) + " " + key.getClass().getName());
+		try {
+//			byte[] encrptedData1 = DESHelper.encryptDES("1".getBytes(), "12345678");
+			SecretKeySpec key = new SecretKeySpec("12345678".getBytes(), "DES");
+			Cipher cipher = Cipher.getInstance("DES");
+			cipher.init(Cipher.ENCRYPT_MODE, key);
+//			System.out.println(byteToHexString(cipher.update("1".getBytes())));
+//			System.out.println(byteToHexString(cipher.update("2".getBytes())));
+//			System.out.println(byteToHexString(cipher.update("3".getBytes())));
+//			System.out.println(byteToHexString(cipher.update("4".getBytes())));
+//			System.out.println(byteToHexString(cipher.update("5".getBytes())));
+//			System.out.println(byteToHexString(cipher.update("6".getBytes())));
+//			System.out.println(byteToHexString(cipher.update("7".getBytes())));
+//			System.out.println(byteToHexString(cipher.update("8".getBytes())));
+//			System.out.println(byteToHexString(cipher.update("9".getBytes())));
+			cipher.update("1".getBytes());
+			cipher.update("2".getBytes());
+			cipher.update("3".getBytes());
+			cipher.update("4".getBytes());
+			cipher.update("5".getBytes());
+			cipher.update("6".getBytes());
+			cipher.update("7".getBytes());
+			cipher.update("8".getBytes());
+			byte[] encryptedData1 = cipher.doFinal();
+			System.out.println(byteToHexString(encryptedData1));
+			
+			byte[] encrptedData2 = DESHelper.encryptDES("12345678".getBytes(), "12345678");
+			System.out.println("single: " + byteToHexString(encrptedData2));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static String byteToHexString(byte[] data) {
+		String result = "0x";
+		for (int i = 0; i < data.length; ++i) {
+			result += String.format("%02X", data[i]);
+		}
+		return result;
+	}
+
+	private static void studyGenerateJSON() {
+//		GenerateJSON.testGenerateJSON();
+	}
+
+	private void studyRandom() {
+		Random random = new Random();
+		for (int i = 0; i < 5; ++i) {
+//			System.out.println(random.nextInt() + " hash=" + random.hashCode());
+			System.out.println("hash=" + String.valueOf(i) + "  " + String.valueOf(i).hashCode());
+		}
+	}
+
 	static class A {  
 		public void process() { 
 			System.out.print("A ");
@@ -198,7 +291,7 @@ public class Main {
 	}
 	
 	private void repairPhotoTimeStudy() {
-		new RepairPhotoTime().debug();;
+		new RepairPhotoTime().debug();
 	}
 	
 	private void metadataExtractorStudy() {
@@ -389,17 +482,93 @@ public class Main {
 //		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(date));
 //		System.out.println(date.getTime());
 		
+//		Date date = new Date();
 		
-		String dateTime = "20130210 161320";
+//		Calendar cal = Calendar.getInstance();
+//		int year = cal.get(Calendar.YEAR);
+//		
+////		System.out.println("cal.get(Calendar.YEAR)()=" + cal.get(Calendar.YEAR));
+//		String dateString = "12-18";
+//		String timePeroid = "02:00-04:00";
+//		int index = timePeroid.indexOf('-');
+//		String timeStart = timePeroid.substring(0, index);
+//		String timeEnd = timePeroid.substring(index+1);
+//		System.out.println("timeStart="+timeStart + " timeEnd=" + timeEnd);
+////		String dateTime = "20130210 161320";
+//		
+//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+////		DateFormat df = new SimpleDateFormat("yyyyMMdd HHmmss");
+//		try {
+//			System.out.println(year + "-" + dateString + " " + timeStart);
+//			df.parse(year + "-" + dateString + " " + timeStart);
+//		} catch (ParseException e) {
+//			throw new RuntimeException("parser file name fail, your pattern need to update");
+//		}
 		
-		DateFormat df = new SimpleDateFormat("yyyyMMdd HHmmss");
+		
+//		System.out.println(df.getCalendar().getTime());
+		
+//		Calendar cal = Calendar.getInstance();
+//		int year = cal.get(Calendar.YEAR);	// TODO: 隐患:跨年
+//		
+////		System.out.println("cal.get(Calendar.YEAR)()=" + cal.get(Calendar.YEAR));
+		String dateString = "12-31";
+		String timePeroid = "22:00-00:00";
+//		int index = timePeroid.indexOf('-');
+//		String timeStart = timePeroid.substring(0, index);
+//		String timeEnd = timePeroid.substring(index+1);
+//		System.out.println("timeStart="+timeStart + " timeEnd=" + timeEnd);
+//		String dateTime = "20130210 161320";
+		
+		Date[] dates = parseTime(dateString, timePeroid);
+//		try {
+//			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//			dates[0] = df.parse(year + "-" + dateString + " " + timeStart);
+//			
+//			df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//			dates[1] = df.parse(year + "-" + dateString + " " + timeEnd);
+//		} catch (ParseException e) {
+//			throw new RuntimeException("parser file name fail, your pattern need to update");
+//		}
+		
+		System.out.println("dates[0]=" + dates[0] + "\ndates[1]=" + dates[1]);
+		System.out.println("compare=" + dates[0].after(dates[1]));
+	}
+	
+	/**
+	 * 
+	 * @param dateString : example "12-18"
+	 * @param timePeroid : example "02:00-04:00"
+	 * @return
+	 */
+	public static Date[] parseTime(String dateString, String timePeroid) {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);	
+		
+//		String dateString = "12-18";
+//		String timePeroid = "02:00-04:00";
+		int index = timePeroid.indexOf('-');
+		String timeStart = timePeroid.substring(0, index);
+		String timeEnd = timePeroid.substring(index+1);
+		
+		Date[] dates = new Date[2];
 		try {
-			df.parse(dateTime);
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			dates[0] = df.parse(year + "-" + dateString + " " + timeStart);
+			
+			df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			dates[1] = df.parse(year + "-" + dateString + " " + timeEnd);
 		} catch (ParseException e) {
 			throw new RuntimeException("parser file name fail, your pattern need to update");
 		}
 		
-		System.out.println(df.getCalendar().getTime());
+		if (dates[0].after(dates[1])) {
+			cal.setTime(dates[1]);
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			dates[1] = cal.getTime();
+		}
+		
+		return dates;
 	}
 	
 	private void exifStudy() {

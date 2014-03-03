@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<serverlist>
+	<server>
+		<serverid>
+			SRV0001
+		</serverid>
+		<name>
+			服务器1
+		</name>
+		<password>
+			<![CDATA[123456  ]]>
+		</password>
+		<url file="tvlist1.xml">
+			<![CDATA[http://192.168.1.52/raw_files/tvlist1.xml]]>
+		</url>
+		<url file="tvlist2.xml">
+			<![CDATA[http://192.168.1.52/raw_files/tvlist2.xml]]>
+		</url>
+		<url file="tvlist3.xml">
+			<![CDATA[http://192.168.1.52/raw_files/tvlist3.xml]]>
+		</url>
+	</server>
+</serverlist>

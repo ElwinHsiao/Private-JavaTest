@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tvlist label="DIY央视频道">
+  <tv>         
+<channelid>A0000</channelid>  
+ <name>CCTV-1综合</name>              
+ <url tvsource="新浪"><![CDATA[http://live.64ma.com/livePlay.asp?sinaId=50661]]></url>
+<url tvsource="腾讯"><![CDATA[http://qqlive.dnion.com:1863/1980972519.flv]]></url>
+ <url tvsource="CNTV"><![CDATA[http://t.live.cntv.cn/m3u8/cctv-1.m3u8]]></url>
+</tv>
+</tvlist>
